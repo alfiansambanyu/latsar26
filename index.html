@@ -1,7 +1,45 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Cek Progres Layanan Publik</title>
+</head>
 <body>
-  <h1>WEBSITE AKTIF</h1>
-  <p>GitHub Pages berhasil</p>
+
+<h2>Cek Progres Layanan Publik</h2>
+
+<input type="text" id="nomor" placeholder="Masukkan Nomor Layanan">
+<button onclick="cek()">Cari</button>
+
+<div id="hasil"></div>
+
+<script>
+async function cek() {
+  const nomor = document.getElementById("nomor").value;
+  const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT1mfNTxqnNzlVBZpwWhoGKAt23iRiCOlBtZ23v4VGOnKTscxuNsY0MY-5Dp2qlvzhDAwz355hp0jmD/pub?gid=0&single=true&output=csv");
+  const data = await res.text();
+  const rows = data.split("\n");
+
+  let ketemu = false;
+
+  for (let i = 1; i < rows.length; i++) {
+    const col = rows[i].split(",");
+    if (col[0] === nomor) {
+      document.getElementById("hasil").innerHTML = `
+        <p><b>Tanggal:</b> ${col[2]}</p>
+        <p><b>Jenis Layanan:</b> ${col[3]}</p>
+        <p><b>Lokasi:</b> ${col[4]}</p>
+        <p><b>Status:</b> ${col[5]}</p>
+      `;
+      ketemu = true;
+    }
+  }
+
+  if (!ketemu) {
+    document.getElementById("hasil").innerHTML = "Nomor layanan tidak ditemukan";
+  }
+}
+</script>
+
 </body>
 </html>
+
