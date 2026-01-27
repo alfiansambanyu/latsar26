@@ -25,10 +25,10 @@ async function cek() {
     const col = rows[i].split(",");
     if (col[0] === nomor) {
       document.getElementById("hasil").innerHTML = `
-        <p><b>Tanggal:</b> ${col[2]}</p>
-        <p><b>Jenis Layanan:</b> ${col[3]}</p>
-        <p><b>Lokasi:</b> ${col[4]}</p>
-        <p><b>Status:</b> ${col[5]}</p>
+        <p><b>Tanggal:</b> ${col[1]}</p>
+        <p><b>Jenis Layanan:</b> ${col[2]}</p>
+        <p><b>Lokasi:</b> ${col[3]}</p>
+        <p><b>Status:</b> ${col[4]}</p>
       `;
       ketemu = true;
     }
