@@ -173,7 +173,7 @@ footer {
 
 <!-- TOMBOL GOOGLE FORM -->
 <div class="form-section">
-  <a href="https://drive.google.com/file/d/1XuSMYwEiBKZ2S0TwSebMh5xpC0SouWE2/view?usp=drive_link" target="_blank">
+  <a href="https://forms.gle/xixjsguVMUgHeTwZ7">
     Ajukan Permohonan Layanan Tera/Tera Ulang Disini!
   </a>
 </div>
@@ -225,7 +225,7 @@ async function cekLayanan() {
     return;
   }
 
-  const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT1mfNTxqnNzlVBZpwWhoGKAt23iRiCOlBtZ23v4VGOnKTscxuNsY0MY-5Dp2qlvzhDAwz355hp0jmD/pub?gid=0&single=true&output=csv");
+  const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSabRsCKk4xRAHNzpX25t5Bs2JAA-w1l2sycvl4AIQaYTe7BFFwBjQTiyxReGp3jp10u1PAVHNEK2bu/pub?gid=1685468197&single=true&output=csv");
   const text = await res.text();
   const data = parseCSV(text);
 
