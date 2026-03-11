@@ -29,14 +29,6 @@ height:110px;
 margin-bottom:10px;
 }
 
-header h1{
-font-size:24px;
-}
-
-header p{
-font-size:15px;
-}
-
 /* CONTAINER */
 
 .container{
@@ -88,15 +80,9 @@ font-weight:bold;
 cursor:pointer;
 }
 
-button:hover{
-background:#2a6da8;
-}
-
 /* RESULT */
 
-.row{
-margin-bottom:12px;
-}
+.row{margin-bottom:12px}
 
 .label{
 font-size:12px;
@@ -108,15 +94,6 @@ font-weight:bold;
 margin-top:3px;
 }
 
-/* STATUS */
-
-.status{
-padding:6px 12px;
-border-radius:20px;
-font-size:13px;
-font-weight:bold;
-}
-
 /* WORKFLOW */
 
 .workflow{
@@ -124,20 +101,19 @@ display:flex;
 align-items:center;
 justify-content:center;
 gap:10px;
-margin:25px 0;
+margin:30px 0;
 font-weight:bold;
 }
 
 .step{
 padding:10px 16px;
 border-radius:20px;
-background:#ddd;
 font-size:14px;
 animation:pulse 2s infinite;
 }
 
 .arrow{
-font-size:20px;
+font-size:22px;
 font-weight:bold;
 }
 
@@ -165,16 +141,14 @@ font-weight:bold;
 animation:pulse 2s infinite;
 }
 
-.stat h2{
-font-size:28px;
-}
+.stat h2{font-size:28px}
 
 .stat.diterima{background:#e6cff2}
 .stat.proses{background:#fffc00}
 .stat.selesai{background:#4cbb17;color:white}
 .stat.perbaikan{background:#ff0800;color:white}
 
-/* FORM BUTTON */
+/* BUTTON FORM */
 
 .form-btn a{
 display:block;
@@ -214,7 +188,7 @@ padding-bottom:20px;
 
 <img src="Logo-Kabupaten-Bojonegoro.png">
 
-<h1>UPTD METROLOGI LEGAL KABUPATEN BOJONEGORO</h1>
+<h2>UPTD METROLOGI LEGAL KABUPATEN BOJONEGORO</h2>
 
 <p><b>SILAT NEGORO</b></p>
 <p>Sistem Informasi Layanan Tera/Tera Ulang</p>
@@ -236,11 +210,9 @@ padding-bottom:20px;
 </div>
 
 <div class="card form-btn">
-
 <a href="https://forms.gle/xixjsguVMUgHeTwZ7">
 Ajukan Permohonan Tera/Tera Ulang
 </a>
-
 </div>
 
 <div class="card">
@@ -289,32 +261,38 @@ function parseCSV(text){
 return text.split("\n").map(r=>r.split(","))
 }
 
-/* WORKFLOW */
+/* ENTER SEARCH */
+
+document.getElementById("search").addEventListener("keypress",function(e){
+if(e.key==="Enter"){cekLayanan()}
+})
+
+/* WORKFLOW PANAH */
 
 function workflow(status){
 
 status=status.toLowerCase()
 
-let step1="step"
-let step2="step"
-let step3="step"
+let s1="step"
+let s2="step"
+let s3="step"
 
-if(status.includes("diterima")) step1+=" diterima"
-if(status.includes("diproses")){step1+=" diterima";step2+=" proses"}
-if(status.includes("selesai")){step1+=" diterima";step2+=" proses";step3+=" selesai"}
-if(status.includes("perbaikan")){step1+=" diterima";step2+=" proses";step3+=" perbaikan"}
+if(status.includes("diterima")) s1+=" diterima"
+if(status.includes("diproses")){s1+=" diterima";s2+=" proses"}
+if(status.includes("selesai")){s1+=" diterima";s2+=" proses";s3+=" selesai"}
+if(status.includes("perbaikan")){s1+=" diterima";s2+=" proses";s3+=" perbaikan"}
 
 return`
 
 <div class="workflow">
 
-<div class="${step1}">Diterima</div>
-<div class="arrow">➜</div>
+<div class="${s1}">Diterima</div>
+<div class="arrow">➡</div>
 
-<div class="${step2}">Diproses</div>
-<div class="arrow">➜</div>
+<div class="${s2}">Diproses</div>
+<div class="arrow">➡</div>
 
-<div class="${step3}">
+<div class="${s3}">
 ${status.includes("perbaikan")?"Perbaikan":"Selesai"}
 </div>
 
@@ -336,7 +314,26 @@ hitungStatistik()
 
 }
 
-/* STATISTIK BULAN BERJALAN */
+/* PARSE DATE FLEXIBLE */
+
+function parseDate(str){
+
+if(!str) return null
+
+if(str.includes("/")){
+let p=str.split("/")
+return new Date(p[2],p[1]-1,p[0])
+}
+
+if(str.includes("-")){
+return new Date(str)
+}
+
+return new Date(str)
+
+}
+
+/* STATISTIK */
 
 function hitungStatistik(){
 
@@ -345,25 +342,15 @@ let proses=0
 let selesai=0
 let perbaikan=0
 
-const today=new Date()
-const bulan=today.getMonth()+1
-const tahun=today.getFullYear()
+let now=new Date()
 
 for(let i=1;i<sheetData.length;i++){
 
-let tanggal=sheetData[i][1]
+let tanggal=parseDate(sheetData[i][1])
 
 if(!tanggal) continue
 
-let parts=tanggal.split("/")
-
-if(parts.length<3) continue
-
-let d=parseInt(parts[0])
-let m=parseInt(parts[1])
-let y=parseInt(parts[2])
-
-if(m==bulan && y==tahun){
+if(tanggal.getMonth()==now.getMonth() && tanggal.getFullYear()==now.getFullYear()){
 
 let status=(sheetData[i][6]||"").toLowerCase()
 
@@ -387,8 +374,8 @@ document.getElementById("sPerbaikan").innerText=perbaikan
 
 function cekLayanan(){
 
-const val=document.getElementById("search").value.toLowerCase()
-const hasil=document.getElementById("hasil")
+let val=document.getElementById("search").value.toLowerCase()
+let hasil=document.getElementById("hasil")
 
 for(let i=1;i<sheetData.length;i++){
 
@@ -412,9 +399,7 @@ hasil.innerHTML=`
 
 <div class="row">
 <div class="label">Status</div>
-<div class="value">
-<span class="status">${status}</span>
-</div>
+<div class="value">${status}</div>
 </div>
 
 ${workflow(status)}
