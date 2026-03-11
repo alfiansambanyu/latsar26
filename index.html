@@ -29,13 +29,19 @@ height:120px;
 margin-bottom:10px;
 }
 
-header h1{font-size:24px;}
-header p{font-size:16px;}
+header h1{
+font-size:24px;
+margin:3px;
+}
+
+header p{
+font-size:16px;
+}
 
 /* CONTAINER */
 
 .container{
-max-width:1000px;
+max-width:900px;
 margin:auto;
 padding:10px;
 }
@@ -68,11 +74,32 @@ padding:14px;
 font-size:16px;
 border-radius:8px;
 border:1px solid #ccc;
+margin-bottom:10px;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+padding:14px;
+background:#3b82c4;
+border:none;
+border-radius:8px;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#2a6da8;
 }
 
 /* RESULT */
 
-.row{margin-bottom:12px;}
+.row{
+margin-bottom:12px;
+}
 
 .label{
 font-size:12px;
@@ -84,7 +111,7 @@ font-weight:bold;
 margin-top:3px;
 }
 
-/* STATUS BADGE */
+/* STATUS */
 
 .status{
 padding:6px 12px;
@@ -117,7 +144,10 @@ height:4px;
 background:#ddd;
 }
 
-.step{text-align:center;flex:1;}
+.step{
+text-align:center;
+flex:1;
+}
 
 .circle{
 width:35px;
@@ -135,19 +165,9 @@ color:white;
 .step.active .circle{background:#fffc00;}
 .step.error .circle{background:#ff0800;animation:shake .4s infinite alternate;}
 
-.step p{font-size:12px;margin-top:5px;}
-
-/* FORM BUTTON */
-
-.form-btn a{
-display:block;
-background:#2e7d32;
-color:white;
-padding:14px;
-border-radius:8px;
-text-decoration:none;
-text-align:center;
-font-weight:bold;
+.step p{
+font-size:12px;
+margin-top:5px;
 }
 
 /* STATISTICS */
@@ -163,17 +183,31 @@ margin-top:20px;
 padding:20px;
 border-radius:12px;
 text-align:center;
-color:#333;
 font-weight:bold;
 animation:pulse 2s infinite;
 }
 
-.stat h2{font-size:28px;}
+.stat h2{
+font-size:28px;
+}
 
 .stat.diterima{background:#e6cff2;}
 .stat.proses{background:#fffc00;}
 .stat.selesai{background:#4cbb17;color:white;}
 .stat.perbaikan{background:#ff0800;color:white;}
+
+/* BUTTON FORM */
+
+.form-btn a{
+display:block;
+background:#2e7d32;
+color:white;
+padding:14px;
+border-radius:8px;
+text-decoration:none;
+text-align:center;
+font-weight:bold;
+}
 
 /* FOOTER */
 
@@ -185,7 +219,7 @@ margin-top:20px;
 padding-bottom:20px;
 }
 
-/* ANIMATION */
+/* ANIMATIONS */
 
 @keyframes pulse{
 0%{transform:scale(1)}
@@ -220,7 +254,9 @@ padding-bottom:20px;
 
 <div class="title">Cek Status Layanan</div>
 
-<input id="search" placeholder="Ketik Nomor Layanan...">
+<input id="search" placeholder="Masukkan Nomor Layanan">
+
+<button onclick="cekLayanan()">Cari Status</button>
 
 <div id="hasil"></div>
 
@@ -233,8 +269,6 @@ Ajukan Permohonan Tera/Tera Ulang
 </a>
 
 </div>
-
-<!-- STATISTIK BULAN BERJALAN -->
 
 <div class="card">
 
@@ -273,6 +307,8 @@ Ajukan Permohonan Tera/Tera Ulang
 </footer>
 
 <script>
+
+let sheetData=[]
 
 const sheetURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSabRsCKk4xRAHNzpX25t5Bs2JAA-w1l2sycvl4AIQaYTe7BFFwBjQTiyxReGp3jp10u1PAVHNEK2bu/pub?gid=1685468197&single=true&output=csv&t="+Date.now()
 
@@ -319,7 +355,14 @@ async function init(){
 
 const res=await fetch(sheetURL)
 const text=await res.text()
-const data=parseCSV(text)
+
+sheetData=parseCSV(text)
+
+hitungStatistik(sheetData)
+
+}
+
+function hitungStatistik(data){
 
 let diterima=0
 let proses=0
@@ -355,6 +398,67 @@ document.getElementById("sDiterima").innerText=diterima
 document.getElementById("sProses").innerText=proses
 document.getElementById("sSelesai").innerText=selesai
 document.getElementById("sPerbaikan").innerText=perbaikan
+
+}
+
+function cekLayanan(){
+
+const val=document.getElementById("search").value.toLowerCase()
+const hasil=document.getElementById("hasil")
+
+for(let i=1;i<sheetData.length;i++){
+
+let nomor=(sheetData[i][0]||"").toLowerCase()
+
+if(nomor.includes(val)){
+
+let status=sheetData[i][6]
+let statusClass=status.replace(/\s/g,'')
+
+hasil.innerHTML=`
+
+<div class="row">
+<div class="label">Nomor Layanan</div>
+<div class="value">${sheetData[i][0]}</div>
+</div>
+
+<div class="row">
+<div class="label">Jenis Layanan</div>
+<div class="value">${sheetData[i][5]}</div>
+</div>
+
+<div class="row">
+<div class="label">Status</div>
+<div class="value">
+<span class="status ${statusClass}">${status}</span>
+</div>
+</div>
+
+${tracking(status)}
+
+<div class="row">
+<div class="label">Jadwal Pengujian</div>
+<div class="value">${sheetData[i][2]}</div>
+</div>
+
+<div class="row">
+<div class="label">Lokasi</div>
+<div class="value">${sheetData[i][4]}</div>
+</div>
+
+<div class="row">
+<div class="label">Keterangan</div>
+<div class="value">${sheetData[i][7]}</div>
+</div>
+
+`
+
+return
+}
+
+}
+
+hasil.innerHTML="<b>Nomor layanan tidak ditemukan</b>"
 
 }
 
