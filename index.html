@@ -29,12 +29,8 @@ padding:20px 10px;
 }
 
 header img{
-height:80px;
-margin-bottom:8px;
-}
-
-header h2{
-font-size:18px;
+height:90px;
+margin-bottom:10px;
 }
 
 /* CONTAINER */
@@ -49,20 +45,18 @@ padding:10px;
 
 .card{
 background:white;
-border-radius:12px;
-padding:18px;
+border-radius:14px;
+padding:20px;
 margin-bottom:15px;
-box-shadow:0 6px 18px rgba(0,0,0,0.15);
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
-
-/* TITLE */
 
 .title{
 font-size:18px;
 font-weight:bold;
 border-bottom:2px solid #3b82c4;
-padding-bottom:5px;
-margin-bottom:10px;
+padding-bottom:6px;
+margin-bottom:12px;
 }
 
 /* INPUT */
@@ -76,8 +70,6 @@ border:1px solid #ccc;
 margin-bottom:10px;
 }
 
-/* BUTTON */
-
 button{
 width:100%;
 padding:14px;
@@ -90,11 +82,9 @@ font-weight:bold;
 cursor:pointer;
 }
 
-/* RESULT */
+/* DATA */
 
-.row{
-margin-bottom:10px;
-}
+.row{margin-bottom:10px}
 
 .label{
 font-size:12px;
@@ -103,35 +93,33 @@ color:#777;
 
 .value{
 font-weight:bold;
-font-size:14px;
 margin-top:2px;
 }
 
 /* WORKFLOW */
 
 .tracking{
-margin:30px 0;
+margin:35px 0;
 position:relative;
 }
 
 .progress-line{
 position:absolute;
-top:22px;
-left:16.6%;
-width:66.6%;
-height:5px;
+top:25px;
+left:12.5%;
+width:75%;
+height:6px;
 background:#ddd;
 }
 
 .progress{
 position:absolute;
-top:22px;
-left:16.6%;
-width:0;
-max-width:66.6%;
-height:5px;
+top:25px;
+left:12.5%;
+height:6px;
 background:#4cbb17;
 transition:0.4s;
+max-width:75%;
 }
 
 .steps{
@@ -142,25 +130,25 @@ position:relative;
 
 .step{
 text-align:center;
-width:33%;
+width:25%;
 }
 
 /* ICON */
 
 .circle{
-width:45px;
-height:45px;
+width:50px;
+height:50px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
 margin:auto;
-font-size:20px;
-font-weight:bold;
+font-size:22px;
 color:white;
+font-weight:bold;
 }
 
-/* LABEL STEP */
+/* LABEL */
 
 .label-step{
 margin-top:6px;
@@ -168,14 +156,18 @@ font-size:12px;
 font-weight:bold;
 }
 
-/* STATUS COLORS */
+/* COLORS */
 
 .diterima{
 background:#e6cff2;
 color:#000;
 }
 
-.proses{
+.jadwal{
+background:#8a2be2;
+}
+
+.uji{
 background:#fffc00;
 color:#000;
 }
@@ -191,12 +183,12 @@ background:#ff0800;
 /* ANIMATION */
 
 .active{
-animation:pulse 1.4s infinite;
+animation:pulse 1.3s infinite;
 }
 
 @keyframes pulse{
 0%{transform:scale(1)}
-50%{transform:scale(1.18)}
+50%{transform:scale(1.2)}
 100%{transform:scale(1)}
 }
 
@@ -221,34 +213,6 @@ color:white;
 font-size:12px;
 margin-top:10px;
 padding-bottom:15px;
-}
-
-/* DESKTOP OPTIMIZATION */
-
-@media(min-width:768px){
-
-header img{
-height:150px;
-}
-
-header h2{
-font-size:22px;
-}
-
-.circle{
-width:60px;
-height:60px;
-font-size:26px;
-}
-
-.label-step{
-font-size:14px;
-}
-
-.card{
-padding:25px;
-}
-
 }
 
 </style>
@@ -305,13 +269,9 @@ function parseCSV(text){
 return text.split("\n").map(r=>r.split(","))
 }
 
-/* ENTER SEARCH */
-
 document.getElementById("search").addEventListener("keypress",function(e){
 if(e.key==="Enter"){cekLayanan()}
 })
-
-/* WORKFLOW */
 
 function workflow(status){
 
@@ -320,43 +280,51 @@ status=status.toLowerCase()
 let progress="0%"
 
 let s1="circle diterima"
-let s2="circle proses"
-let s3="circle selesai"
+let s2="circle jadwal"
+let s3="circle uji"
+let s4="circle selesai"
 
 let icon1="📝"
-let icon2="⏳"
-let icon3="✔"
+let icon2="📅"
+let icon3="🧪"
+let icon4="✔"
 
-let label3="Selesai"
+let label4="Selesai"
 
 /* DITERIMA */
 
 if(status.includes("diterima")){
-progress="22%"
+progress="20%"
 s1+=" active"
 }
 
-/* DIPROSES */
+/* DIJADWALKAN */
 
-if(status.includes("diproses")){
-progress="44%"
+if(status.includes("dijadwalkan")){
+progress="40%"
 s2+=" active"
+}
+
+/* DIUJI */
+
+if(status.includes("diuji")){
+progress="70%"
+s3+=" active"
 }
 
 /* SELESAI */
 
 if(status.includes("selesai")){
-progress="66.6%"
-s3+=" active"
+progress="75%"
 }
 
-/* PERLU PERBAIKAN */
+/* PERBAIKAN */
 
 if(status.includes("perbaikan")){
-progress="66.6%"
-icon3="⚠"
-s3="circle perbaikan active"
-label3="Perlu Perbaikan"
+progress="75%"
+icon4="⚠"
+s4="circle perbaikan active"
+label4="Perlu Perbaikan"
 }
 
 return`
@@ -375,12 +343,17 @@ return`
 
 <div class="step">
 <div class="${s2}">${icon2}</div>
-<div class="label-step">Diproses</div>
+<div class="label-step">Sedang Dijadwalkan</div>
 </div>
 
 <div class="step">
 <div class="${s3}">${icon3}</div>
-<div class="label-step">${label3}</div>
+<div class="label-step">Sedang Diuji</div>
+</div>
+
+<div class="step">
+<div class="${s4}">${icon4}</div>
+<div class="label-step">${label4}</div>
 </div>
 
 </div>
@@ -390,8 +363,6 @@ return`
 `
 }
 
-/* LOAD DATA */
-
 async function init(){
 
 const res=await fetch(sheetURL)
@@ -400,8 +371,6 @@ const text=await res.text()
 sheetData=parseCSV(text)
 
 }
-
-/* SEARCH */
 
 function cekLayanan(){
 
