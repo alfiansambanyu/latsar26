@@ -271,50 +271,102 @@ document.getElementById("search").addEventListener("keypress",function(e){
 if(e.key==="Enter"){cekLayanan()}
 })
 
+```javascript
 function workflow(status){
 
 status=status.toLowerCase()
 
-let progress="0%"
+let step1=""
+let step2=""
+let step3=""
+let step4=""
 
-let s1="circle diterima"
-let s2="circle jadwal"
-let s3="circle uji"
-let s4="circle selesai"
+let line1=""
+let line2=""
+let line3=""
 
-let icon1="📝"
-let icon2="📅"
-let icon3="🧪"
 let icon4="✔"
-
 let label4="Selesai"
 
 /* DITERIMA */
 
 if(status.includes("diterima")){
-progress="0%"
-s1+=" active"
+step1="active"
 }
+
+/* DIJADWALKAN */
 
 if(status.includes("dijadwalkan")){
-progress="33%"
-s2+=" active"
+step2="active"
+line1="active"
 }
+
+/* DIUJI */
 
 if(status.includes("diuji")){
-progress="66%"
-s3+=" active"
+step3="active"
+line1="active"
+line2="active"
 }
+
+/* SELESAI */
 
 if(status.includes("selesai")){
-progress="100%"
+line1="active"
+line2="active"
+line3="active"
 }
 
+/* PERBAIKAN */
+
 if(status.includes("perbaikan")){
-progress="100%"
 icon4="⚠"
-s4="circle perbaikan active"
 label4="Perlu Perbaikan"
+step4="active"
+line1="active"
+line2="active"
+line3="active"
+}
+
+return`
+
+<div class="tracking">
+
+<div class="timeline">
+
+<div class="step">
+<div class="circle diterima ${step1}">📝</div>
+<div class="label-step">Diterima</div>
+</div>
+
+<div class="line ${line1}"></div>
+
+<div class="step">
+<div class="circle jadwal ${step2}">📅</div>
+<div class="label-step">Sedang Dijadwalkan</div>
+</div>
+
+<div class="line ${line2}"></div>
+
+<div class="step">
+<div class="circle uji ${step3}">🧪</div>
+<div class="label-step">Sedang Diuji</div>
+</div>
+
+<div class="line ${line3}"></div>
+
+<div class="step">
+<div class="circle ${status.includes('perbaikan') ? 'perbaikan' : 'selesai'} ${step4}">
+${icon4}
+</div>
+<div class="label-step">${label4}</div>
+</div>
+
+</div>
+
+</div>
+
+`
 }
 
 return`
