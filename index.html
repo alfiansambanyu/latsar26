@@ -111,15 +111,23 @@ transform:translateY(-2px);
 #hasil{
 margin-top:20px;
 display:none;
-animation:fadeUp 0.6s;
+}
+
+/* RESULT CARD */
+
+.resultCard{
+background:#f8fafc;
+border-radius:10px;
+padding:15px;
+margin-bottom:15px;
+animation:fadeUp 0.5s;
+border:1px solid #e2e8f0;
 }
 
 /* INFO ROW */
 
 .row{
-margin-bottom:14px;
-padding-bottom:6px;
-border-bottom:1px dashed #ddd;
+margin-bottom:10px;
 }
 
 .label{
@@ -245,10 +253,9 @@ to{opacity:1;transform:translateY(0)}
 
 <img src="Logo-Kabupaten-Bojonegoro.png">
 
-<h1>DINAS PERDAGANGAN, KOPERASI DAN USAHA MIKRO</h1>
+<h1>UPTD METROLOGI LEGAL</h1>
 <h1>KABUPATEN BOJONEGORO</h1>
 
-<p>UPTD METROLOGI LEGAL</p>
 <p><b>SILAT NEGORO</b></p>
 <p>(Sistem Informasi Layanan Tera/Tera Ulang)</p>
 
@@ -275,7 +282,7 @@ Ajukan Permohonan Tera/Tera Ulang
 </div>
 
 <footer>
-© 2026 Pemerintah Kabupaten Bojonegoro
+© 2026 Dinas Perdagangan, Koperasi dan Usaha Mikro Kabupaten Bojonegoro
 </footer>
 
 <script>
@@ -352,67 +359,71 @@ const res=await fetch(url)
 const text=await res.text()
 const data=parseCSV(text)
 
-let ditemukan=false
+const hasilFilter=data.slice(1).filter(r =>
+(r[0]||"").toLowerCase().includes(nomor)
+)
 
-for(let i=1;i<data.length;i++){
+if(hasilFilter.length===0){
 
-let nomorSheet=(data[i][0]||"").toLowerCase()
+hasil.innerHTML="<b>Nomor layanan tidak ditemukan</b>"
+return
 
-if(nomorSheet.includes(nomor)){
+}
 
-let statusClass=(data[i][6]||"").replace(/\s/g,'')
+let html=""
 
-hasil.innerHTML=`
+hasilFilter.forEach(row=>{
+
+let statusClass=(row[6]||"").replace(/\s/g,'')
+
+html+=`
+
+<div class="resultCard">
 
 <div class="row">
 <div class="label">Nomor Layanan</div>
-<div class="value">${data[i][0]}</div>
+<div class="value">${row[0]}</div>
 </div>
 
 <div class="row">
 <div class="label">Jenis Layanan</div>
-<div class="value">${data[i][5]}</div>
+<div class="value">${row[5]}</div>
 </div>
 
 <div class="row">
 <div class="label">Status</div>
 <div class="value">
-<span class="status ${statusClass}">${data[i][6]}</span>
+<span class="status ${statusClass}">${row[6]}</span>
 </div>
 </div>
 
 <div class="row">
 <div class="label">Jadwal Pengujian</div>
-<div class="value">${data[i][2]}</div>
+<div class="value">${row[2]}</div>
 </div>
 
 <div class="row">
 <div class="label">Tanggal Diterima</div>
-<div class="value">${data[i][1]}</div>
+<div class="value">${row[1]}</div>
 </div>
 
 <div class="row">
 <div class="label">Lokasi</div>
-<div class="value">${data[i][4]}</div>
+<div class="value">${row[4]}</div>
 </div>
 
 <div class="row">
 <div class="label">Keterangan</div>
-<div class="value">${data[i][7]}</div>
+<div class="value">${row[7]}</div>
+</div>
+
 </div>
 
 `
 
-ditemukan=true
-break
+})
 
-}
-
-}
-
-if(!ditemukan){
-hasil.innerHTML="<b>Nomor layanan tidak ditemukan</b>"
-}
+hasil.innerHTML=html
 
 }
 
