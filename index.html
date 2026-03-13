@@ -108,9 +108,10 @@ position:relative;
 position:absolute;
 top:25px;
 left:25px;
-right:25px;
+width:calc(100% - 50px);
 height:6px;
 background:#ddd;
+border-radius:4px;
 }
 
 .progress{
@@ -119,7 +120,9 @@ top:25px;
 left:25px;
 height:6px;
 background:#4cbb17;
+border-radius:4px;
 transition:0.4s;
+max-width:calc(100% - 50px);
 }
 .steps{
 display:flex;
@@ -145,6 +148,8 @@ margin:auto;
 font-size:22px;
 color:white;
 font-weight:bold;
+position:relative;
+z-index:2;
 }
 
 /* LABEL */
@@ -195,13 +200,18 @@ animation:pulse 1.3s infinite;
 
 .form-btn a{
 display:block;
-background:#2e7d32;
+background:#FF2800;
 color:white;
 padding:14px;
 border-radius:8px;
 text-decoration:none;
 text-align:center;
 font-weight:bold;
+font-size:16px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+  .form-btn a:hover{
+background:#d61f00;
 }
 
 /* FOOTER */
